@@ -23,25 +23,24 @@ func main() {
 	wg.Add(1)
 
 	//this will handle messages coming from the validOrdersCh
-	go func(){
-		order := <- validateOrdersCh
-		fmt.Printf("Valid order received: %v\n", order)
+	go func(validOrderCh <-chan order, invalidOrderCh <-chan invalidOrder){
+		select {
+		case order := <- validateOrdersCh:
+			fmt.Printf("Valid order received: %v\n", order)
+		case order := <- invalidOrdersCh:
+			fmt.Printf("Invalid order recieved: %v. Issue: %v\n", order.order, order.err)
+		}
 		wg.Done()
-	}()
 
-	// for an invalid order
-	go func ()  {
-		order := <- invalidOrdersCh
-		fmt.Printf("Invalid order recieved: %v. Issue: %v\n", order.order, order.err)
-		wg.Done()
-	}()
+		// to make directional pass the channels in as parameters, then when you receive them you can receive them as directional channels.
+	}(validateOrdersCh, invalidOrdersCh)
 
 	wg.Wait()
 
 }
 
 // This is going to receive its orders from the receiveOrders goroutine. Using a channel.
-func validateOrders(in chan order, out chan order, errCh chan invalidOrder) {
+func validateOrders(in <-chan order, out chan<- order, errCh chan<- invalidOrder) {
 	order := <- in
 	if order.Quantity <= 0 {
 		// error condition
@@ -53,7 +52,7 @@ func validateOrders(in chan order, out chan order, errCh chan invalidOrder) {
 }
 
 // receiveOrders needs the wait group passed in
-func receiveOrders(out chan order) {
+func receiveOrders(out chan<- order) {
 	for _, rawOrder := range rawOrders {
 		var newOrder order
 		/*in side the json package in the standard library, there is a package called encoding/json.
