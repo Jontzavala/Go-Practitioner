@@ -173,3 +173,88 @@ This Repo will consist of some practitioner level courses for Go.
     - after adding close(ch) we no longer run into the deadlock problem.
 - Demo: For Loops
     - see For_loops folder
+### Common Concurrency Patterns
+- Non-blocking Error Channels
+    - ```
+        var (
+            in = make(chan string)
+            out = make(chan int)
+            errCh = make(chan error, 1)
+        )
+        func worker(in <-chan string, out chan <- int, err chan<- error) {
+            for msg := range in {
+                // converts strings into integers with the Atoi function from the string conversion package.
+                i, err := strconv.Atoi(msg)
+                if err != nil {
+                    errCh <- err
+                    return
+                }
+                out <- i
+            }
+        }
+        ```
+    - So by adding the buffer to the errCh it allow us to make sure the channel always has a place to put the error at the end of the function.
+- Encapsulating Goroutines
+    - ```
+        var (
+            in = make(chan string)
+            out = make(chan int)
+            errCh = make(chan error)
+        )
+        func worker(in <-chan string, out chan <- int, err chan<- error) {
+            for msg := range in {
+                // converts strings into integers with the Atoi function from the string conversion package.
+                i, err := strconv.Atoi(msg)
+                if err != nil {
+                    errCh <- err
+                    return
+                }
+                out <- i
+            }
+        }
+        ```
+    - When trying to send a nil value in a channel the application panics
+    - ```
+        var (
+            in = make(chan string)
+        )
+        func worker(in <-chan string) (chan int, chan error) {
+            // intializing the channels inside the function guarantees that nil will not be a value passed into it for out.
+            out := make(chan int)
+            errCh := make(chan error, 1)
+            go func() {
+                for msg := range in {
+                    i, err := strconv.Atoi(msg)
+                    if err != nil {
+                        errCh <-
+                        return
+                    }
+                    out <- i
+                }
+            }()
+            return out, errCh
+        }
+        ```
+- Demo: Non-blocking Error Channels and Encapsulating Goroutines
+    - see N_e_c_e_g folder
+- Messaging Patterns
+    - Foundational Concurrency Patterns
+        - Single prducer single consumer
+            - Producers and consumers are the different sides of the channel
+            - single producer means that there is one goroutine sending messages into a channel.
+            - single consumer means that there is one goroutine receiving messages from a channel.
+        - Single producer multiple consumer
+            - multiple goroutines that are pulling messages from the same channel
+        - Multiple producer single consumer
+            - multiple channels, one goroutine
+        - multiple producers multiple consumers
+- Demo: Single Producer, Single Consumer
+    - see Single_producer_single_consumer folder
+- Demo: Single Producer, Multiple Consumer
+    - see Single_producer_multiple_consumer folder
+- Demo: Multiple Producer, Single Consumer
+    - see Multiple_producer_single_consumer folder
+    - with multiple producers you need some sort of supervisory function like with the addition goroutine in the reserverInventory function.
+    - it keeps an eye on things to make sure it knows when the last message was sent. Because none of the workers knows if it's the last one to send messages.
+- Demo: Multiple Producer, Multiple Consumer
+    - see Multiple_producer_multiple_consumer folder
