@@ -258,3 +258,45 @@ This Repo will consist of some practitioner level courses for Go.
     - it keeps an eye on things to make sure it knows when the last message was sent. Because none of the workers knows if it's the last one to send messages.
 - Demo: Multiple Producer, Multiple Consumer
     - see Multiple_producer_multiple_consumer folder
+### Additional Tools to Support Concurrent Programming
+- The Sync Package - Mutexes
+    - Mutexes
+    - ```
+        var m sync.Mutex
+        func main() {
+            go func() {
+                m.Lock()
+                defer m.Unlock()
+                // do thing
+            }()
+            go func() {
+                m.Lock()
+                defer m.Unlock()
+                // do other thing
+            }()
+        }
+        ```
+    - When the m.Lock() tries to aquire the lock the Go scheduler is going to block all of the goroutines that are trying to acquire that lock at the lock method call.
+    - It will then allow one through until unlock is called.
+    - As soon as the goroutine calls unlock, then another goroutine is allowed to do what's called acquiring the lock, and then it can proceed.
+    - What this allows us to do is this introduces a mechanism to synchronize or make goroutines execute sequentially.
+- Demo: Mutexes
+    - see Mutexes folder
+- Demo : sync.Once
+    - see Once folder
+    - ```go get github.com/mattn/go-sqlite3``` for database
+    - One of the things we do with SQL databases in our programs is we have to create what's called a db object.
+    - A db object, that's in the SQL package, and its signature often looks like this. ```var db *sql.DB```
+- Demo: The Race Detector
+    - see Race_detector folder
+- Contexts
+    - The Purpose of Contexts
+        - The context package was developed as a way to communicate cancelation between goroutines.
+        - We can communicate using the context that the operation is no longer necessary, and that context will communicate that canelation over to the goroutines.
+        - There are basic forms of the context package.
+            - Cancel
+            - Timeout
+- Demo: Context with Cancel
+    - see Context_with_cancel folder
+- Demo: Context with Timeout
+    - see Context_with_timeout folder
