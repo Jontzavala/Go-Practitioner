@@ -1,6 +1,7 @@
 # Go-Practitioner
 This Repo will consist of some practitioner level courses for Go.
 - [Concurrent Programmung in Go](#concurrent-programming-in-go)
+- [Testing in Go](#testing-in-go)
 
 ## Concurrent Programming in Go
 ### Concurrency in Go
@@ -300,3 +301,72 @@ This Repo will consist of some practitioner level courses for Go.
     - see Context_with_cancel folder
 - Demo: Context with Timeout
     - see Context_with_timeout folder
+## Testing in Go
+### Introduction
+- Introduction
+    - Why Write Tests?
+        - Initial Build: Ensure correctness of application
+        - Production: Identify errors before users are impacted
+        - Enhancements: Prevent new development from breaking older feature
+    - Testing Support in Go
+        - Test Runner: some program that is able to execute our tests for us.
+        - Testing API: some way to interact with the test and the test runner itself, to let the test runner know what's going on with our test.
+        - Assertion/Expectation API: to assert that we expect our test to prove something or state is present in our application.
+        - There actually is no assertion or expectation API built into Go.
+- Demo: The First Test
+    - see The_first_test folder
+### Testing Business Logic
+- The Testing Pyramid
+    - Unit at the bottom: Prove that individual units of logic are correct
+    - then Component: Confirm that different application concerns (i.e. packages) perform correctly
+    - then Integration: Validate that entire program works as expected
+    - then at the top is End to end: Demonstrate that entire system works correctly together
+- Testing API
+    - The T object is the way that we communicate with the test runner
+    - Communicate with test runner
+        - Report failures
+        - Logging
+        - Configure how to test is executed
+        - Iteract with enviornment
+    - No assertions!
+- Reporting Test Failures
+    - Non-immediate failures vs Immediate failures
+        - Non-immediate
+            - t.Fail(): this marks the test as failed and moves on.
+            - t.Error(...interface{}): if we want a little bit more information. It's the same as the fail method but it's followed by a call to the log method on that T object.
+            - t.Errorf(string,...interface{}): uses a formatting string instead of just sending data to the test log.
+        - Immediate
+            - t.FailNow()
+            - t.Fatal(...interface{})
+            - t.Fatalf(string,...interface{})
+- Why are Assertions Missing?
+    - ```
+        // reduce learning curve
+        func TestThing(t *testing.T){
+            l, r := 2, 4
+            expect := 6
+
+            got := l + r
+
+            if got != expect {
+                // report failure
+            }
+        }
+        ```
+    - Checking for test failures uses same construct as production code.
+    - If you can write production code, you can write tests.
+- ```
+    // focus on common concerns
+    func TestThing(t *testing.T){
+            l, r := 2, 4
+            expect := 6
+
+            got := l + r
+
+            assert.Equal(got, expect)       // assertion style
+            Expect(expect).To(Equal(got))   // expect style
+    }
+    ```
+    - Both styles are equally valid and subject to team preference
+- Demo: Writing a Unit Test
+    - see Writing_a_unit_test folder
