@@ -2,6 +2,7 @@
 This Repo will consist of some practitioner level courses for Go.
 - [Concurrent Programmung in Go](#concurrent-programming-in-go)
 - [Testing in Go](#testing-in-go)
+- [Accessing Relational Databases in Go](#accessing-relational-databases-in-go)
 
 ## Concurrent Programming in Go
 ### Concurrency in Go
@@ -370,3 +371,14 @@ This Repo will consist of some practitioner level courses for Go.
     - Both styles are equally valid and subject to team preference
 - Demo: Writing a Unit Test
     - see Writing_a_unit_test folder
+## Accessing Relational Databases in Go
+### Getting Started with Go and Relational Databases
+- Go and Relational Database
+    - Data Access Technology
+        - Standard SQL Libraries(RDBMS)
+        - ORM Libraries
+        - NoSQL Date Store Drivers
+    - Supported RDMBS
+        - MySQL, SQL Server, Oracle, Postgres, Snowflake, SAP, and many more
+- Demo: Driver Installation and Connecting Database
+    - see Driver_instal_and_connecting_db folder
