@@ -382,3 +382,5 @@ This Repo will consist of some practitioner level courses for Go.
         - MySQL, SQL Server, Oracle, Postgres, Snowflake, SAP, and many more
 - Demo: Driver Installation and Connecting Database
     - see Driver_instal_and_connecting_db folder
+- Demo: Create Record
+    - see Create_record folder
