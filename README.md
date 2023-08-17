@@ -384,3 +384,5 @@ This Repo will consist of some practitioner level courses for Go.
     - see Driver_instal_and_connecting_db folder
 - Demo: Create Record
     - see Create_record folder
+- Demo: Retrieve Record
+    - see Retrieve_record folder
